@@ -1,73 +1,66 @@
-# Minimal Template
+# Calendar Kit Multi-Resource Draggable Event Bug Reproduction
 
-This is a [React Native](https://reactnative.dev/) project built with [Expo](https://expo.dev/) and [React Native Reusables](https://reactnativereusables.com).
+This is a minimal reproduction repository demonstrating a bug in [@howljs/calendar-kit](https://www.npmjs.com/package/@howljs/calendar-kit) where draggable events are rendered in the wrong position when using multiple resources with pagination and scrolling enabled.
 
-It was initialized using the following command:
+## Bug Description
 
-```bash
-npx @react-native-reusables/cli@latest init -t calendar-kit-multi-resource-custom-draggable
-```
+When a calendar has:
 
-## Getting Started
+- Multiple resources (more than the resources per page)
+- Resource pagination enabled (`resourcePagingEnabled={true}`)
+- Resource scrolling enabled (`enableResourceScroll={true}`)
+- A custom draggable event component
 
-To run the development server:
+The draggable event appears to be rendered in the wrong position, shifted to the left of where it should be.
 
-```bash
-    npm run dev
-    # or
-    yarn dev
-    # or
-    pnpm dev
-    # or
-    bun dev
-```
+## Visual Indicators
 
-This will start the Expo Dev Server. Open the app in:
+The draggable event in this reproduction has **red top and bottom borders** to make it easy to identify. These are rendered via the `TopEdgeComponent` and `BottomEdgeComponent` props on the `DraggableEvent` component.
 
-- **iOS**: press `i` to launch in the iOS simulator _(Mac only)_
-- **Android**: press `a` to launch in the Android emulator
-- **Web**: press `w` to run in a browser
+## Reproduction Video
 
-You can also scan the QR code using the [Expo Go](https://expo.dev/go) app on your device. This project fully supports running in Expo Go for quick testing on physical devices.
+[`assets/images/repro-video.mov`](./assets/images/repro-video.mov)
 
-## Adding components
+## Setup
 
-You can add more reusable components using the CLI:
+This project uses:
+
+- **Expo** (React Native framework)
+- **@howljs/calendar-kit** v2.5.6
+- **React Native** 0.81.5
+
+### Installation
 
 ```bash
-npx react-native-reusables/cli@latest add [...components]
+# Install dependencies
+bun install
+
+# Start the development server
+bun run dev
 ```
 
-> e.g. `npx react-native-reusables/cli@latest add input textarea`
+## Configuration
 
-If you don't specify any component names, you'll be prompted to select which components to add interactively. Use the `--all` flag to install all available components at once.
+The bug reproduction uses the following Calendar Kit configuration:
 
-## Project Features
+- **Resources**: 10 meeting rooms
+- **Resources per page**: 5 (`resourcePerPage={5}`)
+- **Resource pagination**: Enabled (`resourcePagingEnabled={true}`)
+- **Resource scrolling**: Enabled (`enableResourceScroll={true}`)
+- **Drag to edit**: Enabled (`allowDragToEdit={true}`)
+- **Drag to create**: Enabled (`allowDragToCreate={true}`)
 
-- ⚛️ Built with [Expo Router](https://expo.dev/router)
-- 🎨 Styled with [Tailwind CSS](https://tailwindcss.com/) via [Nativewind](https://www.nativewind.dev/)
-- 📦 UI powered by [React Native Reusables](https://github.com/founded-labs/react-native-reusables)
-- 🚀 New Architecture enabled
-- 🔥 Edge to Edge enabled
-- 📱 Runs on iOS, Android, and Web
+## How to Reproduce
 
-## Learn More
+1. Run the app using `bun run dev`
+2. Navigate to a resource that is not on the first page (scroll down to see resources 6-10)
+3. Long press on an event to select it for dragging
+4. Observe that the draggable event (with red top and bottom borders) appears shifted to the left of its actual position
 
-To dive deeper into the technologies used:
+## Expected Behavior
 
-- [React Native Docs](https://reactnative.dev/docs/getting-started)
-- [Expo Docs](https://docs.expo.dev/)
-- [Nativewind Docs](https://www.nativewind.dev/)
-- [React Native Reusables](https://reactnativereusables.com)
+The draggable event should appear at the correct horizontal position, aligned with the original event location.
 
-## Deploy with EAS
+## Actual Behavior
 
-The easiest way to deploy your app is with [Expo Application Services (EAS)](https://expo.dev/eas).
-
-- [EAS Build](https://docs.expo.dev/build/introduction/)
-- [EAS Updates](https://docs.expo.dev/eas-update/introduction/)
-- [EAS Submit](https://docs.expo.dev/submit/introduction/)
-
----
-
-If you enjoy using React Native Reusables, please consider giving it a ⭐ on [GitHub](https://github.com/founded-labs/react-native-reusables). Your support means a lot!
+The draggable event appears shifted to the left, misaligned with the original event position.
